@@ -180,4 +180,28 @@ public class EmployeeRepositoryTest {
         //then - verify the output
         assertThat(savedEmployee).isNotNull();
     }
+
+    // Junit test for custom JPQLNamed params operation
+    @DisplayName("Junit test for custom JPQLNamed params operation")
+    @Test
+    public void givenFirstAndLastName_whenFindByJPQLNamedParams_thenEmployeeObject(){
+
+        //given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Joan")
+                .lastName("Roa")
+                .email("setoba1192@gmail.com")
+                .build();
+
+        employeeRepository.save(employee);
+
+        String firstName ="Joan";
+        String lastName ="Roa";
+
+        //when - action or the behavior that we are goint to test
+        Employee savedEmployee = employeeRepository.findByJPQLNamedParams(firstName, lastName);
+
+        //then - verify the output
+        assertThat(savedEmployee).isNotNull();
+    }
 }
