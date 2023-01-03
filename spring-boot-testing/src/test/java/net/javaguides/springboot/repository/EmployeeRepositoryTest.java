@@ -156,4 +156,28 @@ public class EmployeeRepositoryTest {
         assertThat(deletedEmployee).isEmpty();
 
     }
+
+    // Junit test for custom JPQL operation
+    @DisplayName("Junit test for custom JPQL operation")
+    @Test
+    public void givenFirstAndLastName_whenFindByJPQL_thenEmployeeObject(){
+
+        //given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Joan")
+                .lastName("Roa")
+                .email("setoba1192@gmail.com")
+                .build();
+
+        employeeRepository.save(employee);
+
+        String firstName ="Joan";
+        String lastName ="Roa";
+
+        //when - action or the behavior that we are goint to test
+        Employee savedEmployee = employeeRepository.findByJPQL(firstName, lastName);
+
+        //then - verify the output
+        assertThat(savedEmployee).isNotNull();
+    }
 }
