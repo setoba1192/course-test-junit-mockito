@@ -112,7 +112,7 @@ public class EmployeeRepositoryTest {
     // Junit test for update employee operation
     @DisplayName("Junit test for update employee operation")
     @Test
-    public void givenEmployeeObject_whenUpdateEmploy_thenReturnUpdatedEmployee(){
+    public void givenEmployeeObject_whenUpdateEmploy_thenReturnUpdatedEmployee() {
 
         //given - precondition or setup
         Employee employee = Employee.builder()
@@ -137,7 +137,7 @@ public class EmployeeRepositoryTest {
     // Junit test for delete employee operation
     @DisplayName("Junit test for delete employee operation")
     @Test
-    public void givenEmployeeObject_whenDelete_thenRemove(){
+    public void givenEmployeeObject_whenDelete_thenRemove() {
 
         //given - precondition or setup
         Employee employee = Employee.builder()
@@ -160,7 +160,7 @@ public class EmployeeRepositoryTest {
     // Junit test for custom JPQL operation
     @DisplayName("Junit test for custom JPQL operation")
     @Test
-    public void givenFirstAndLastName_whenFindByJPQL_thenEmployeeObject(){
+    public void givenFirstAndLastName_whenFindByJPQL_thenEmployeeObject() {
 
         //given - precondition or setup
         Employee employee = Employee.builder()
@@ -171,8 +171,8 @@ public class EmployeeRepositoryTest {
 
         employeeRepository.save(employee);
 
-        String firstName ="Joan";
-        String lastName ="Roa";
+        String firstName = "Joan";
+        String lastName = "Roa";
 
         //when - action or the behavior that we are goint to test
         Employee savedEmployee = employeeRepository.findByJPQL(firstName, lastName);
@@ -184,7 +184,7 @@ public class EmployeeRepositoryTest {
     // Junit test for custom JPQLNamed params operation
     @DisplayName("Junit test for custom JPQLNamed params operation")
     @Test
-    public void givenFirstAndLastName_whenFindByJPQLNamedParams_thenEmployeeObject(){
+    public void givenFirstAndLastName_whenFindByJPQLNamedParams_thenEmployeeObject() {
 
         //given - precondition or setup
         Employee employee = Employee.builder()
@@ -195,11 +195,34 @@ public class EmployeeRepositoryTest {
 
         employeeRepository.save(employee);
 
-        String firstName ="Joan";
-        String lastName ="Roa";
+        String firstName = "Joan";
+        String lastName = "Roa";
 
         //when - action or the behavior that we are goint to test
         Employee savedEmployee = employeeRepository.findByJPQLNamedParams(firstName, lastName);
+
+        //then - verify the output
+        assertThat(savedEmployee).isNotNull();
+    }
+
+    // Junit test for custom query using native SQL with index params
+    @DisplayName("Junit test for custom query using native SQL with index params")
+    @Test
+    public void givenFirstNameAndLastName_whenFindByNativeSQL_thenReturnEmployeeObject() {
+
+        //given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Joan")
+                .lastName("Roa")
+                .email("setoba1192@gmail.com")
+                .build();
+        employeeRepository.save(employee);
+
+        String firstName = "Joan";
+        String lastName = "Roa";
+
+        //when - action or the behavior that we are goint to test
+        Employee savedEmployee = employeeRepository.findByNativeSQL(firstName, lastName);
 
         //then - verify the output
         assertThat(savedEmployee).isNotNull();
