@@ -6,24 +6,36 @@ import net.javaguides.springboot.service.impl.EmployeeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
+@ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
 
+    @Mock
     private EmployeeRepository employeeRepository;
 
-    private EmployeeService employeeService;
+    @InjectMocks
+    private EmployeeServiceImpl employeeService;
+
+    private Employee employee;
 
     @BeforeEach
     public void setup() {
 
-        employeeRepository = Mockito.mock(EmployeeRepository.class);
-        employeeService = new EmployeeServiceImpl(employeeRepository);
+        employee = Employee.builder()
+                .id(1L)
+                .firstName("Joan")
+                .lastName("Roa")
+                .email("setoba1192@gmail.com")
+                .build();
 
     }
 
@@ -32,18 +44,12 @@ public class EmployeeServiceTest {
     @Test
     public void givenEmployeeObject_whenSaveEmployee_thenReturnEmployeeObject() {
 
-        //given - precondition or setup
-        Employee employee = Employee.builder()
-                .id(1L)
-                .firstName("Joan")
-                .lastName("Roa")
-                .email("setoba1192@gmail.com")
-                .build();
+        //given - precondition or setup (moved to setup method)
 
-        BDDMockito.given(employeeRepository.findByEmail(employee.getEmail()))
+        given(employeeRepository.findByEmail(employee.getEmail()))
                 .willReturn(Optional.empty());
 
-        BDDMockito.given(employeeRepository.save(employee))
+        given(employeeRepository.save(employee))
                 .willReturn(employee);
 
         //when - action or the behavior that we are goint to test
@@ -51,7 +57,6 @@ public class EmployeeServiceTest {
 
         //then - verify the output
         assertThat(savedEmployee).isNotNull();
-
     }
 
 }
