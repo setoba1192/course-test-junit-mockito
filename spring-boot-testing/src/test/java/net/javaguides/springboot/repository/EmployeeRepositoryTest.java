@@ -1,6 +1,7 @@
 package net.javaguides.springboot.repository;
 
 import net.javaguides.springboot.model.Employee;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +18,24 @@ public class EmployeeRepositoryTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @DisplayName(("Junit test for save employee operation"))
-    @Test
-    public void givenEmployeeObject_whenSave_thenReturnSavedEmployee() {
+    private Employee employee;
 
-        //given - precondition or setup
-        Employee employee = Employee.builder()
+
+    @BeforeEach
+    public void setup() {
+
+        employee = Employee.builder()
                 .firstName("Joan")
                 .lastName("Roa")
                 .email("setoba1192@gmail.com")
                 .build();
+    }
+
+    @DisplayName(("Junit test for save employee operation"))
+    @Test
+    public void givenEmployeeObject_whenSave_thenReturnSavedEmployee() {
+
+        //given - precondition or setup (replaced by setup method)
 
         //when - action or the behavior that we are going to test
         Employee savedEmployee = employeeRepository.save(employee);
@@ -42,12 +51,7 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenEmployeesList_whenFindAll_thenEmployeesList() {
 
-        //given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Joan")
-                .lastName("Roa")
-                .email("setoba1192@gmail.com")
-                .build();
+        //given - precondition or setup (replaced by setup method)
 
         Employee employee1 = Employee.builder()
                 .firstName("Sebastian")
@@ -72,13 +76,7 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenEmployeeObject_whenFindById_thenReturnEmployeeObject() {
 
-        //given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Joan")
-                .lastName("Roa")
-                .email("setoba1192@gmail.com")
-                .build();
-
+        //given - precondition or setup - replaced by setup method
         employeeRepository.save(employee);
         //when - action or the behavior that we are goint to test
         Employee retrievedEmployee = employeeRepository.findById(employee.getId()).get();
@@ -93,12 +91,7 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenEmployeeObject_whenFindByEmail_thenReturnEmployeeObject() {
 
-        //given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Joan")
-                .lastName("Roa")
-                .email("setoba1192@gmail.com")
-                .build();
+        //given - precondition or setup (replaced by setup method)
 
         employeeRepository.save(employee);
 
@@ -114,12 +107,7 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenEmployeeObject_whenUpdateEmploy_thenReturnUpdatedEmployee() {
 
-        //given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Joan")
-                .lastName("Roa")
-                .email("setoba1192@gmail.com")
-                .build();
+        //given - precondition or setup (replaced by setup method)
 
         employeeRepository.save(employee);
         //when - action or the behavior that we are goint to test
@@ -139,12 +127,7 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenEmployeeObject_whenDelete_thenRemove() {
 
-        //given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Joan")
-                .lastName("Roa")
-                .email("setoba1192@gmail.com")
-                .build();
+        //given - precondition or setup (replaced by setup method)
 
         employeeRepository.save(employee);
 
@@ -162,12 +145,7 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenFirstAndLastName_whenFindByJPQL_thenEmployeeObject() {
 
-        //given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Joan")
-                .lastName("Roa")
-                .email("setoba1192@gmail.com")
-                .build();
+        //given - precondition or setup (replaced by setup method)
 
         employeeRepository.save(employee);
 
@@ -186,12 +164,7 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenFirstAndLastName_whenFindByJPQLNamedParams_thenEmployeeObject() {
 
-        //given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Joan")
-                .lastName("Roa")
-                .email("setoba1192@gmail.com")
-                .build();
+        //given - precondition or setup (replaced by setup method)
 
         employeeRepository.save(employee);
 
@@ -210,12 +183,7 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenFirstNameAndLastName_whenFindByNativeSQL_thenReturnEmployeeObject() {
 
-        //given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Joan")
-                .lastName("Roa")
-                .email("setoba1192@gmail.com")
-                .build();
+        //given - precondition or setup (replaced by setup method)
         employeeRepository.save(employee);
 
         String firstName = "Joan";
@@ -223,6 +191,24 @@ public class EmployeeRepositoryTest {
 
         //when - action or the behavior that we are goint to test
         Employee savedEmployee = employeeRepository.findByNativeSQL(firstName, lastName);
+
+        //then - verify the output
+        assertThat(savedEmployee).isNotNull();
+    }
+
+    // Junit test for custom query using native SQL with index params
+    @DisplayName("Junit test for custom query using native SQL with named params")
+    @Test
+    public void givenFirstNameAndLastName_whenFindByNativeSQLNamedParams_thenReturnEmployeeObject() {
+
+        //given - precondition or setup (replaced by setup method)
+        employeeRepository.save(employee);
+
+        String firstName = "Joan";
+        String lastName = "Roa";
+
+        //when - action or the behavior that we are goint to test
+        Employee savedEmployee = employeeRepository.findByNativeSQLNamedParams(firstName, lastName);
 
         //then - verify the output
         assertThat(savedEmployee).isNotNull();
