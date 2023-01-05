@@ -20,8 +20,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
@@ -156,6 +156,22 @@ public class EmployeeServiceTest {
         //then - verify the output
         assertThat(updatedEmployee.getEmail()).isEqualTo("setoba1192@hotmail.com");
         assertThat(updatedEmployee.getFirstName()).isEqualTo("Sebas");
+    }
+
+    // Junit test for deleteEmployee method
+    @DisplayName("Junit test for deleteEmployee method")
+    @Test
+    public void givenEmployeeObject_whenDeleteEmployee_thenNothing(){
+
+        //given - precondition or setup
+        long employeeId = 1l;
+        willDoNothing().given(employeeRepository).deleteById(employeeId);
+
+        //when - action or the behavior that we are goint to test
+        employeeService.deleteEmployee(employeeId);
+
+        //then - verify the output
+        verify(employeeRepository, times(1)).deleteById(employeeId);
     }
 
 }
