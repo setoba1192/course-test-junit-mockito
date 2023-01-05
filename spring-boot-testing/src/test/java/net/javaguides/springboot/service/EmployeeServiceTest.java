@@ -122,4 +122,20 @@ public class EmployeeServiceTest {
         assertThat(employeeList.size()).isEqualTo(0);
     }
 
+    // Junit test for getEmployeeById
+    @DisplayName("Junit test for getEmployeeById method")
+    @Test
+    public void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject(){
+
+        //given - precondition or setup
+        given(employeeRepository.findById(employee.getId()))
+                .willReturn(Optional.of(employee));
+
+        //when - action or the behavior that we are goint to test
+        Employee foundEmployee = employeeService.getEmployeeById(employee.getId()).get();
+
+        //then - verify the output
+        assertThat(foundEmployee).isNotNull();
+    }
+
 }
