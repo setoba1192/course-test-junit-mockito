@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/api/employees")
 @RestController
 public class EmployeeController {
@@ -22,5 +24,10 @@ public class EmployeeController {
     public Employee createEmployee(@RequestBody Employee employee) {
 
         return employeeService.saveEmployee(employee);
+    }
+
+    @GetMapping
+    public List<Employee> getAllEmployees() {
+        return employeeService.getAllEmployees();
     }
 }
