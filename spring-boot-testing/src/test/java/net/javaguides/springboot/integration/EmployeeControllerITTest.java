@@ -16,16 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
@@ -218,4 +214,26 @@ public class EmployeeControllerITTest {
                 .andDo(print());
     }
 
+    // Junit test for deleteEmployee REST API
+    @DisplayName("Junit integration test for deleteEmployee REST API")
+    @Test
+    public void givenEmployeeId_whenDeleteEmployee_thenReturn200Status() throws Exception {
+
+        //given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Joan")
+                .lastName("Roa")
+                .email("setoba1192@gmail.com")
+                .build();
+        employeeRepository.save(employee);
+
+        //when - action or the behavior that we are goint to test
+        ResultActions response = mockMvc.perform(delete("/api/employees/{id}", employee.getId()));
+
+        //then - verify the output
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().string("Employee deleted successfully"));
+
+    }
 }
