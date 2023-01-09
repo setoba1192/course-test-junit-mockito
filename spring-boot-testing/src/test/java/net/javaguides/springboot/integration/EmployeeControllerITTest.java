@@ -188,4 +188,34 @@ public class EmployeeControllerITTest {
                 .andExpect(jsonPath("$.email", is(updatedEmployee.getEmail())));
     }
 
+    @DisplayName("Junit integration test for updateEmployee when employee not found REST API")
+    @Test
+    public void givenNotFoundEmployee_whenUpdateEmployee_thenReturnNotFound() throws Exception {
+
+        //given - precondition or setup
+        long employeeId = 1L;
+        Employee savedEmployee = Employee.builder()
+                .firstName("Joan")
+                .lastName("Roa")
+                .email("setoba1192@gmail.com")
+                .build();
+
+        Employee updatedEmployee = Employee.builder()
+                .firstName("Joan Sebastian")
+                .lastName("Roa Sanchez")
+                .email("setoba1192@hotmail.com")
+                .build();
+
+        employeeRepository.save(savedEmployee);
+
+        //when - action or the behavior that we are goint to test
+        ResultActions response = mockMvc.perform(put("/api/employees/{id}", employeeId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedEmployee)));
+
+        //then - verify the output
+        response.andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
 }
