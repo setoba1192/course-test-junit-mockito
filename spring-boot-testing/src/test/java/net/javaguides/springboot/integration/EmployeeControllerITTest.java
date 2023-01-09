@@ -130,4 +130,28 @@ public class EmployeeControllerITTest {
                 .andExpect(jsonPath("$.email", is(employee.getEmail())));
     }
 
+    // negative scenario -valid employee id
+    // Junit test for getEmployeeById Rest API that return not found
+    @DisplayName("Junit integration test for getEmployeeById Rest API that return not found")
+    @Test
+    public void givenEmployeeId_whenGetEmployeeById_thenReturnEmty() throws Exception {
+
+        //given - precondition or setup
+        Employee employee = Employee.builder()
+                .id(1L)
+                .firstName("Joan")
+                .lastName("Roa")
+                .email("setoba1192@gmail.com")
+                .build();
+        employeeRepository.save(employee);
+
+        long employeeId = 1L;
+
+        //when - action or the behavior that we are goint to test
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
+
+        //then - verify the output
+        response.andExpect(status().isNotFound())
+                .andDo(print());
+    }
 }
