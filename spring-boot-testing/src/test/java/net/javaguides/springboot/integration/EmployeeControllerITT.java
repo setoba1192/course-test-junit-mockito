@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,18 @@ public class EmployeeControllerITT {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    /**
+     * Load values into application context.
+     * Without that, containertest try to connect to mysql local instance
+     * @param registry
+     */
+    @DynamicPropertySource
+    public static void dynamicPropertySource(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", mySQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.username", mySQLContainer::getUsername);
+        registry.add("spring.datasource.password", mySQLContainer::getPassword);
+    }
 
     @BeforeEach
     void setup() {
@@ -141,14 +155,13 @@ public class EmployeeControllerITT {
 
         //given - precondition or setup
         Employee employee = Employee.builder()
-                .id(1L)
                 .firstName("Joan")
                 .lastName("Roa")
                 .email("setoba1192@gmail.com")
                 .build();
         employeeRepository.save(employee);
 
-        long employeeId = 1L;
+        long employeeId = -1L;
 
         //when - action or the behavior that we are goint to test
         ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
