@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -99,4 +101,33 @@ public class EmployeeControllerITTest {
                 .andDo(print())
                 .andExpect(jsonPath("$.size()", is(listOfEmployees.size())));
     }
+
+    // positive scenario -valid employee id
+    // Junit integration test for getEmployeeById Rest API
+    @DisplayName("Junit integration test for getEmployeeById Rest API")
+    @Test
+    public void givenEmployeeId_whenGetEmployeeById_thenReturnEmployeeObject() throws Exception {
+
+        //given - precondition or setup
+        Employee employee = Employee.builder()
+                .firstName("Joan")
+                .lastName("Roa")
+                .email("setoba1192@gmail.com")
+                .build();
+        employeeRepository.save(employee);
+
+        long employeeId = employee.getId();
+
+        //when - action or the behavior that we are goint to test
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
+
+        //then - verify the output
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.id", is(notNullValue())))
+                .andExpect(jsonPath("$.firstName", is(employee.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(employee.getLastName())))
+                .andExpect(jsonPath("$.email", is(employee.getEmail())));
+    }
+
 }
